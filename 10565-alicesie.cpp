@@ -1,53 +1,28 @@
 #include<iostream>
-#include<stdlib.h>
-#include<math.h>
 #include<stdio.h>
+#include<cmath>
 using namespace std;
 
-int sieve[1000001];
-bool mark[1000001];
-
-int highestunmark(int n){
-    for(int i=n-1;i>1;i--) if(!mark[i]) return i;
-}
-
-void calc(int n){
-    if(n<=3) return;
-    for(int i=2;i<=sqrt(n)+1;i++){
-        if(n%i==0){
-            mark[i]=true;
-            i=n/i;
-            mark[i]=true;
-        }
-    }
-}
-
-int s(int N){
-    if(sieve[N]==0){
-        int n=N;
-        for(int i=2;i<=N;i++) mark[i]=false;
-        do{
-            calc(n);
-            n=highestunmark(n);
-        }while(n>2);
-        int c=0;
-        for(int i=2;i<=N;i++){
-            if(!mark[i]) c++;
-        }
-        sieve[N]=c;
-    }
-    return sieve[N];
-}
-
-
+int c[1000001];
+bool p[1000001];
 int main(){
-    for(int i=2;i<=1000001;i++) sieve[i]=0;
-    for(int i=2;i<=1000001;i++) s(i);
-    int T,N;
-    cin>>T;
+    for(int i=0;i<1000001;i++){ c[i]=0; p[i]=1;}
+    for(int i=2;i<1000001;i++){
+        if(p[i]==0){
+            c[i]=c[i-1];
+        }else{
+            for(int j=2*i;j<1000001;j+=i){
+                p[j]=0;
+            }
+            c[i]=c[i-1]+1;
+        }
+    }
+    int T;
+    scanf("%d",&T);
     for(int i=0;i<T;i++){
-        cin>>N;
-        cout<<s(N)<<endl;
+        int N;
+        scanf("%d",&N);
+        cout<<c[N]+!p[N]<<endl;
     }
     return 0;
 }
